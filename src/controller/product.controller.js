@@ -2,6 +2,7 @@ const productService=require('../services/product.service.js')
 
 const createProduct=async(req,res)=>{
     try{
+        const user=req.user;
         const product=await productService.createProduct(req.body);
         return res.status(201).send(product);
     }

@@ -1,9 +1,10 @@
 const Category=require('../models/category.model.js')
 const Product=require('../models/product.model.js')
+const Rating=require('../models/rating.model.js')
 
 async function createProduct(reqData){
     let topLevel=await Category.findOne({name:reqData.topLevelCategory});
-
+ 
     if(!topLevel){
         topLevel=new Category({
             name:reqData.topLevelCategory,
@@ -42,6 +43,8 @@ async function createProduct(reqData){
         await thirdLevel.save();
     }
 
+
+
     const product= new Product({
         title:reqData.title,
         color:reqData.color,
@@ -53,7 +56,8 @@ async function createProduct(reqData){
         price:reqData.price,
         sizes:reqData.size,
         quantity:reqData.quantity,
-        category:thirdLevel._id
+        category:thirdLevel._id,
+        
     })
 
     return await product.save();
@@ -73,7 +77,7 @@ async function updateProduct(productId,reqData){
 
 async function findProductById(id){
 
-    const product=await Product.findById(id).populate('category').exec();
+    const product=await Product.findById(id).populate('category').populate('ratings').exec();
 
     if(!product)
     {
@@ -88,6 +92,7 @@ async function getAllProducts(reqQuery){
     let query=Product.find().populate('category');
     if(category){
         const existCategory=await Category.findOne({name:category});
+        console.log("existCategory", existCategory)
         if(existCategory){
             query=query.where('category').equals(existCategory._id);
 
@@ -115,7 +120,7 @@ async function getAllProducts(reqQuery){
     }
 
     if(minDiscount){
-        query=query.where('discountPersent').gte(minDiscont);
+        query= await query.where('discountPersent').gte(minDiscount);
     }
 
     if(stock){
@@ -135,7 +140,7 @@ async function getAllProducts(reqQuery){
     }
 
     const totalProduct=await Product.countDocuments(query);
-
+    console.log("pageNumber",pageNumber)
     const skip=(pageNumber-1)*pageSize;
 
      query=query.skip(skip).limit(pageSize);

@@ -43,11 +43,13 @@ async function createOrder( user, shippAddress){
         totalDiscountedPrice:cart.totalDiscountedPrice,
         discounte:cart.discount,
         totalItem:cart.totalItem,
-        shippAddress:address,
+        shippingAddress:address,
 
     })
 
     const savedOrder=await createdOrder.save();
+
+    console.log("savedOrder",savedOrder)
     return savedOrder;
 }
 
@@ -91,7 +93,7 @@ async function findOrderById(orderId){
  .populate('user')
  .populate({path:'orderItems',populate:{path:'product'}})
  .populate('shippingAddress')
-
+ console.log("order",order)
  return order
 }
 

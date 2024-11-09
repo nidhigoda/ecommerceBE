@@ -5,6 +5,6 @@ const ratingController=require('../controller/rating.controller.js')
 const authenticate= require('../middleware/authenticate.js');
 
 router.post('/create',authenticate,ratingController.createRating);
-router.put('/product/:productId', authenticate, ratingController.getProductRating);
+router.get('/product/:productId', authenticate, ratingController.getProductRating);
 
 module.exports=router

@@ -14,7 +14,7 @@ const createRating=async(req,res)=>{
 
 const getProductRating=async(req,res)=>{
     const productId=req.params.productId;
-    const user=req.user;
+    //const user=req.user;
 
     try{
         const ratings=await ratingService.getProductRating(productId)
